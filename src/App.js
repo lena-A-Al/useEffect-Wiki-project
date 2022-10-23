@@ -1,27 +1,32 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useEffect, useState } from "react";
+
+import axios from "axios";
+
 export default function App() {
   //listen to the input n the form:
-  const [term, setTerm] = useState('');
-  const [result, setResult] = useState('javascript');
+  const [term, setTerm] = useState("");
+  const [result, setResult] = useState([]);
+
+  const search = async () => {
+    const response = await axios.get("https://en.wikipedia.org/w/api.php", {
+      params: {
+        action: "query",
+        list: "search",
+        origin: "*",
+        format: "json",
+        //what we are searching for; it can be hard coded value as well or dynamic.
+        srsearch: term,
+      },
+    });
+    const data = response.data.query.search;
+    console.log(data);
+    if (data) {
+      setResult(data);
+    }
+  };
 
   //The first time the website launches, we want to collect the data from Wikipedia and render it in the website.
   useEffect(() => {
-    const search = async () => {
-      const response = await axios.get('https://en.wikipedia.org/w/api.php', {
-        params: {
-          action: 'query',
-          list: 'search',
-          origin: '*',
-          format: 'json',
-          //what we are searching for; it can be hard coded value as well or dynamic.
-          srsearch: term,
-        },
-      });
-      const data = response.data.query.search;
-      console.log(data);
-      setResult(data);
-    };
     if (term) {
       search();
     }
@@ -33,19 +38,17 @@ export default function App() {
     setTerm(termInSearch);
   };
 
-  const renderFetchData = <p>Hello</p>;
-
-  // const renderFetchData = result.map((item) => {
-  //   return (
-  //     <tr>
-  //       <th scope="row" key={item.pageid}>
-  //         1
-  //       </th>
-  //       <td>{item.title}</td>
-  //       <td>{item.snippet}</td>
-  //     </tr>
-  //   );
-  // });
+  const renderFetchData = result?.map((item) => {
+    return (
+      <tr>
+        <th scope="row" key={item?.pageid}>
+          1
+        </th>
+        <td>{item?.title}</td>
+        <td>{item?.snippet}</td>
+      </tr>
+    );
+  });
 
   return (
     <div className="container">

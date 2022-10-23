@@ -3,7 +3,7 @@ import axios from 'axios';
 export default function App() {
   //listen to the input n the form:
   const [term, setTerm] = useState('');
-  const [result, setResult] = useState('javascript');
+  const [result, setResult] = useState([]);
 
   //The first time the website launches, we want to collect the data from Wikipedia and render it in the website.
   useEffect(() => {
@@ -26,6 +26,7 @@ export default function App() {
       search();
     }
   }, [term]);
+  
   //handler functions:
   const termHandler = (event) => {
     const termInSearch = event.target.value;
@@ -33,19 +34,19 @@ export default function App() {
     setTerm(termInSearch);
   };
 
-  const renderFetchData = <p>Hello</p>;
+  // const renderFetchData = <p>Hello</p>;
 
-  // const renderFetchData = result.map((item) => {
-  //   return (
-  //     <tr>
-  //       <th scope="row" key={item.pageid}>
-  //         1
-  //       </th>
-  //       <td>{item.title}</td>
-  //       <td>{item.snippet}</td>
-  //     </tr>
-  //   );
-  // });
+  const renderFetchData = result && result?.map((item) => {
+    return (
+      <tr>
+        <th scope="row" key={item?.pageid}>
+          1
+        </th>
+        <td>{item?.title}</td>
+        <td>{item?.snippet}</td>
+      </tr>
+    );
+  });
 
   return (
     <div className="container">
